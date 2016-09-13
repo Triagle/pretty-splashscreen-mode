@@ -62,7 +62,7 @@
 (defun pspl/goto-splash ()
   "Swap to the pretty splashscreen buffer (creating it if it doesn't exist)."
   (interactive)
-  (unless (buffer-live-p pretty-splashscreen-buffer-name)
+  (unless (get-buffer pretty-splashscreen-buffer-name)
     (with-current-buffer (get-buffer-create pretty-splashscreen-buffer-name)
       (insert pretty-splashscreen-buffer-contents)
       (pretty-splashscreen-mode)))
