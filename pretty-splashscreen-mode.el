@@ -66,6 +66,6 @@
     (with-current-buffer (get-buffer-create pretty-splashscreen-buffer-name)
       (insert pretty-splashscreen-buffer-contents)
       (pretty-splashscreen-mode)))
-  (switch-to-buffer pretty-splashscreen-buffer-name))
+  (get-buffer pretty-splashscreen-buffer-name))
 (provide 'pretty-splashscreen-mode)
 ;;; pretty-splashscreen-mode.el ends here
