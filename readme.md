@@ -33,7 +33,7 @@ name and contents of the splashscreen.
              ;; Set the contents of the splashscreen
              pretty-splashscreen-buffer-contents (get-string-from-file "~/.emacs.d/boot.txt"))
             ;; Add a startup hook to swap to the splashscreen. `get-string-from-file' is an external, unrelated function
-            (add-hook 'emacs-startup-hook #'pspl/goto-splash t)))
+            (setq initial-buffer-choice #'pspl/goto-splash)))
 
 ;; If use-package is not your cup of tea
 
@@ -44,10 +44,9 @@ name and contents of the splashscreen.
  ;; Set the splashscreen buffer name
  pretty-splashscreen-buffer-name "*emax*"
  ;; Set the contents of the splashscreen. `get-string-from-file' is an external, unrelated function
- pretty-splashscreen-buffer-contents (get-string-from-file "~/.emacs.d/boot.txt"))
-
-;; Add a startup hook to swap to the splashscreen
-(add-hook 'emacs-startup-hook #'pspl/goto-splash t)
+ pretty-splashscreen-buffer-contents (get-string-from-file "~/.emacs.d/boot.txt")
+ ;; Set the default buffer to your new splashscreen
+ (setq initial-buffer-choice #'pspl/goto-splash))
 ```
 
 Results
