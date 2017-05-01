@@ -31,6 +31,10 @@
 
 (require 'cl-lib)
 
+(defcustom pretty-splashscreen-center-text nil
+  "If non-nil, center the splashscreen text (note: cannot be used with daemon)."
+  :group 'pretty-splashscreen
+  :type 'boolean)
 (defcustom pretty-splashscreen-buffer-name "*splash*"
   "The name of the pretty splashscreen buffer."
   :group 'pretty-splashscreen
@@ -39,18 +43,7 @@
   "The contents of the pretty splashscreen buffer."
   :group 'pretty-splashscreen
   :type 'string)
-;;;###autoload
-(define-derived-mode pretty-splashscreen-mode fundamental-mode "Splash"
-  "A pretty splashscreen mode containing read-only, centered text of your choosing"
-  :group 'pretty-splashscreen
-  :syntax-table nil
-  :abbrev-table nil
-  (setq buffer-read-only t
-        left-margin-width (- (/ (window-width) 2) (truncate (/ (pspl--get-max-line) 2)))
-        right-margin-width 0
-        left-fringe-width 0
-        right-fringe-width 0
-        truncate-lines t))
+
 (defun pspl--get-max-line ()
   "Get the longest line length of a buffer (useful for centering)."
   (with-current-buffer (current-buffer)
@@ -58,6 +51,34 @@
               (max (if (stringp acc)
                        (length acc)
                      acc) (length cur))) (split-string (buffer-string) "\n" t))))
+
+(defun pspl--calculate-margin-position ()
+  "Return the center margin position for the splashscreen."
+  (- (/ (window-width) 2) (truncate (/ (pspl--get-max-line) 2))))
+
+;;;###autoload
+(define-derived-mode pretty-splashscreen-mode fundamental-mode "Splash"
+  "A pretty splashscreen mode containing read-only, centered text of your choosing"
+  :group 'pretty-splashscreen
+  :syntax-table nil
+  :abbrev-table nil
+  (setq buffer-read-only t
+        left-margin-width (if (or (not pretty-splashscreen-center-text) (daemonp))
+                              0
+                              (pspl--calculate-margin-position))
+        right-margin-width 0
+        left-fringe-width 0
+        right-fringe-width 0
+        truncate-lines t))
+
+(defun pspl--update-splash ()
+  "Center and redisplay splashscreen (provided `pretty-splashscreen-center-text' is non-nil)"
+  (with-current-buffer (get-buffer pretty-splashscreen-buffer-name)
+    (let ((margin-position (pspl--calculate-margin-position)))
+      (when (and (not (> left-margin-width 0)) (> margin-position 0) (< margin-position 2147483647))
+        (setq left-margin-width margin-position)
+        (set-window-buffer nil (current-buffer))))))
+
 ;;;###autoload
 (defun pspl/goto-splash ()
   "Swap to the pretty splashscreen buffer (creating it if it doesn't exist)."
@@ -65,6 +86,8 @@
   (unless (get-buffer pretty-splashscreen-buffer-name)
     (with-current-buffer (get-buffer-create pretty-splashscreen-buffer-name)
       (insert pretty-splashscreen-buffer-contents)
+      (when (and pretty-splashscreen-center-text (daemonp))
+        (add-hook 'focus-in-hook #'pspl--update-splash))
       (pretty-splashscreen-mode)))
   (get-buffer pretty-splashscreen-buffer-name))
 (provide 'pretty-splashscreen-mode)
