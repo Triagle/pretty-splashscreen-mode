@@ -32,6 +32,8 @@ name and contents of the splashscreen.
              pretty-splashscreen-buffer-name "*emax*"
              ;; Set the contents of the splashscreen
              pretty-splashscreen-buffer-contents (get-string-from-file "~/.emacs.d/boot.txt"))
+             ;; Set to t if you want to center the splashscreen (default: nil)
+             pretty-splashscreen-center-text t
             ;; Add a startup hook to swap to the splashscreen. `get-string-from-file' is an external, unrelated function
             (setq initial-buffer-choice #'pspl/goto-splash)))
 
@@ -45,6 +47,8 @@ name and contents of the splashscreen.
  pretty-splashscreen-buffer-name "*emax*"
  ;; Set the contents of the splashscreen. `get-string-from-file' is an external, unrelated function
  pretty-splashscreen-buffer-contents (get-string-from-file "~/.emacs.d/boot.txt")
+ ;; Set to t if you want to center the splashscreen (default: nil)
+ pretty-splashscreen-center-text t
  ;; Set the default buffer to your new splashscreen
  (setq initial-buffer-choice #'pspl/goto-splash))
 ```
