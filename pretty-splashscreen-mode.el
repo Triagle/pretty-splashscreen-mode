@@ -32,7 +32,7 @@
 (require 'cl-lib)
 
 (defcustom pretty-splashscreen-center-text nil
-  "If non-nil, center the splashscreen text (note: cannot be used with daemon)."
+  "If non-nil, center the splashscreen text."
   :group 'pretty-splashscreen
   :type 'boolean)
 (defcustom pretty-splashscreen-buffer-name "*splash*"
