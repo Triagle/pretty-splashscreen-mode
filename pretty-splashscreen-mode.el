@@ -47,7 +47,7 @@
 (defun pspl--get-max-line ()
   "Get the longest line length of a buffer (useful for centering)."
   (with-current-buffer (current-buffer)
-    (reduce (lambda (acc cur)
+    (cl-reduce (lambda (acc cur)
               (max (if (stringp acc)
                        (length acc)
                      acc) (length cur))) (split-string (buffer-string) "\n" t))))
